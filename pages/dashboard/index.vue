@@ -14,7 +14,7 @@
       </div>
 
       <div v-if="userRole == 'guru'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
-        <nuxt-link to="/rekapan" class="test">{{ totalBalance.saldo_semua }}<i class="ms-3 bi bi-pie-chart-fill zoom"></i></nuxt-link>
+        <nuxt-link to="/rekapan" class="test">Rekapan<i class="ms-3 bi bi-pie-chart-fill zoom"></i></nuxt-link>
       </div>
 
       <div v-if="userRole == 'siswa'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
@@ -37,18 +37,18 @@ async function getRole() {
   if (data) userRole.value = data.role;
 }
 
-const fetchTotalBalance = async () => {
-  const { data, error } = await client.from("jumlah_tabungan").select().single();
-  if (data) totalBalance.value = data;
+// const fetchTotalBalance = async () => {
+//   const { data, error } = await client.from("jumlah_tabungan").select().single();
+//   if (data) totalBalance.value = data;
 
-  if (error) {
-    console.log("Error fetching balance:", error);
-  }
-};
+//   if (error) {
+//     console.log("Error fetching balance:", error);
+//   }
+// };
 
 onMounted(() => {
   getRole();
-  fetchTotalBalance();
+  // fetchTotalBalance();
 });
 </script>
 
