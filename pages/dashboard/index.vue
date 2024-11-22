@@ -1,23 +1,24 @@
 <template>
-  <div class="container-fluid">
-    <div class="row justify-content-evenly">
-      <div v-if="userRole == 'guru'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center siswaa text-center">
+  <div class="container-fluid" :class="{ 'shift-right': menuVisible }">
+    <div class="row justify-content-center">
+      <!-- Konten Dashboard -->
+      <div v-if="userRole == 'guru'" class="col-12 col-md-4 col-lg-3 m-3 d-flex justify-content-center align-items-center siswaa text-center">
         <nuxt-link to="/siswa" class="test">Siswa<i class="ms-3 bi bi-person-fill zoom"></i></nuxt-link>
       </div>
 
-      <div v-if="userRole == 'guru'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center tabungann text-center">
+      <div v-if="userRole == 'guru'" class="col-12 col-md-4 col-lg-3 m-3 d-flex justify-content-center align-items-center tabungann text-center">
         <nuxt-link to="/tabungan" class="test">Tabungan<i class="ms-3 bi bi-bar-chart-fill zoom"></i></nuxt-link>
       </div>
 
-      <div v-if="userRole == 'siswa'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center siswaa text-center">
+      <div v-if="userRole == 'siswa'" class="col-12 col-md-4 col-lg-3 m-3 d-flex justify-content-center align-items-center siswaa text-center">
         <nuxt-link to="/siswa" class="test">Profil<i class="ms-3 bi bi-person-fill zoom"></i></nuxt-link>
       </div>
 
-      <div v-if="userRole == 'guru'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
+      <div v-if="userRole == 'guru'" class="col-12 col-md-4 col-lg-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
         <nuxt-link to="/rekapan" class="test">Rekapan<i class="ms-3 bi bi-pie-chart-fill zoom"></i></nuxt-link>
       </div>
 
-      <div v-if="userRole == 'siswa'" class="col-12 col-md-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
+      <div v-if="userRole == 'siswa'" class="col-12 col-md-4 col-lg-3 m-3 d-flex justify-content-center align-items-center saldo text-center">
         <nuxt-link to="/siswa" class="test">Saldo<i class="ms-3 bi bi-pie-chart-fill zoom"></i></nuxt-link>
       </div>
     </div>
@@ -25,11 +26,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const userRole = ref("");
-const totalBalance = ref({ saldo_semua: 0 });
+const menuVisible = ref(false);
 
 async function getRole() {
   let { data, error } = await client.from("profile").select("role").eq("user_id", user.value.id).single();
@@ -37,18 +37,8 @@ async function getRole() {
   if (data) userRole.value = data.role;
 }
 
-// const fetchTotalBalance = async () => {
-//   const { data, error } = await client.from("jumlah_tabungan").select().single();
-//   if (data) totalBalance.value = data;
-
-//   if (error) {
-//     console.log("Error fetching balance:", error);
-//   }
-// };
-
 onMounted(() => {
   getRole();
-  // fetchTotalBalance();
 });
 </script>
 
@@ -108,25 +98,20 @@ a {
 .saldo:hover {
   transform: scale(1.1);
 }
-
-/* Media Queries for Responsiveness */
-@media (max-width: 600px) {
-  .zoom {
-    font-size: 50px; /* Smaller icon size on mobile */
-  }
-
-  .siswaa,
-  .tabungann,
-  .saldo {
-    font-size: 25px; /* Smaller text on mobile */
-  }
+.container-fluid {
+  min-height: 85vh;
+  transition: transform 0.3s ease;
 }
 
-@media (min-width: 576px) and (max-width: 768px) {
+
+body.shift-right .container-fluid {
+  transform: translateX(130px);
+}
+
+@media (max-width: 768px) {
   .zoom {
     font-size: 50px;
   }
-
   .siswaa,
   .tabungann,
   .saldo {
@@ -134,15 +119,25 @@ a {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 992px) {
   .zoom {
     font-size: 60px;
   }
-
   .siswaa,
   .tabungann,
   .saldo {
     font-size: 25px;
+  }
+}
+
+@media (min-width: 992px) {
+  .zoom {
+    font-size: 70px;
+  }
+  .siswaa,
+  .tabungann,
+  .saldo {
+    font-size: 30px;
   }
 }
 </style>

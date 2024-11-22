@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" :class="{ 'shift-right': menuVisible }">
     <div class="row justify-content-center">
       <!-- Profil Section -->
       <div class="col-12 col-md-3 m-5 d-flex justify-content-center align-items-center profil text-center">
@@ -21,12 +21,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+
 
 const client = useSupabaseClient();
 const totalBalance = ref({ saldo: 0 });
 const siswa = ref();
 const user = useSupabaseUser();
+const menuVisible = ref(false);
 
 const getProfile = async () => {
   const { data, error } = await client
@@ -58,11 +59,21 @@ onMounted(() => {
   getProfile();
   setTimeout(() => {
     fetchTotalBalance();
-  }, 1000); // Pastikan data profil sudah diambil sebelum ambil saldo
+  }, 1000); 
 });
 </script>
 
 <style scoped>
+
+.container-fluid {
+  min-height: 85vh;
+  transition: transform 0.3s ease;
+}
+
+body.shift-right .container-fluid {
+  transform: translateX(130px);
+}
+
 a {
   text-decoration: none;
 }
@@ -81,6 +92,7 @@ a {
   transform: scale(1.1);  /* Tambahkan efek zoom saat hover */
 }
 
+/* Styling untuk Profil dan Saldo Section */
 .profil, .riwayat {
   font-size: 1.5rem; /* Ukuran font default */
   min-height: 150px;
@@ -136,4 +148,3 @@ a {
   }
 }
 </style>
-
