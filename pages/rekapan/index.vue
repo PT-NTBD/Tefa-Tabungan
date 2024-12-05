@@ -43,17 +43,14 @@
 const supabase = useSupabaseClient();
 const rekapData = ref([]);
 
-// Menghitung total tabungan
 const jumlah_tabungan = computed(() => {
   return rekapData.value.reduce((total, rekapan) => {
     return total + rekapan.saldo;
   }, 0);
 });
 
-// Mengambil data dari Supabase
 const fetchRekapData = async () => {
   try {
-    // Ambil data pemasukan dan penarikan
     const [pemasukanData, penarikanData] = await Promise.all([
       supabase.from("pemasukan").select("tgl, nominal"),
       supabase.from("penarikan").select("tgl, nominal"),
@@ -64,9 +61,8 @@ const fetchRekapData = async () => {
     }
 
     const monthlyData = {};
-    let previousSaldo = 0; // Untuk menyimpan saldo kumulatif sebelumnya
+    let previousSaldo = 0; 
 
-    // Proses data pemasukan
     pemasukanData.data.forEach((item) => {
       const date = new Date(item.tgl);
       const year = date.getFullYear();
@@ -85,7 +81,6 @@ const fetchRekapData = async () => {
       monthlyData[key].pemasukan += item.nominal;
     });
 
-    // Proses data penarikan
     penarikanData.data.forEach((item) => {
       const date = new Date(item.tgl);
       const year = date.getFullYear();
@@ -104,24 +99,21 @@ const fetchRekapData = async () => {
       monthlyData[key].penarikan += item.nominal;
     });
 
-    // Hitung saldo untuk setiap bulan berdasarkan pemasukan dan penarikan
     Object.values(monthlyData).forEach((data) => {
       data.saldo = previousSaldo + data.pemasukan - data.penarikan;
-      previousSaldo = data.saldo; // Update saldo kumulatif
+      previousSaldo = data.saldo; 
     });
 
-    // Susun data menjadi array terurut
     rekapData.value = Object.values(monthlyData).sort((a, b) => {
       const dateA = new Date(`${a.tahun}-${a.bulan}-01`);
       const dateB = new Date(`${b.tahun}-${b.bulan}-01`);
-      return dateB - dateA; // Urutkan dari terbaru
+      return dateB - dateA; 
     });
   } catch (error) {
     console.error("Terjadi kesalahan saat mengambil data rekap:", error.message);
   }
 };
 
-// Mendapatkan nama bulan dari angka
 const getMonthName = (monthNumber) => {
   const months = [
     "Januari",
@@ -140,7 +132,6 @@ const getMonthName = (monthNumber) => {
   return months[monthNumber];
 };
 
-// Memuat data saat komponen dimuat
 onMounted(() => {
   fetchRekapData();
 });

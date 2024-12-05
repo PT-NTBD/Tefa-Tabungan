@@ -9,12 +9,11 @@
 </template>
 
 <script setup>
-const user = useSupabaseUser()  // Mendapatkan pengguna yang login
+const user = useSupabaseUser()  
 const client = useSupabaseClient()
 
-const userRole = ref('')  // Menyimpan role pengguna
+const userRole = ref('')  
 
-// Mendapatkan role pengguna dari database
 async function getRole() {
   let { data, error } = await client
     .from('profile')
@@ -23,12 +22,12 @@ async function getRole() {
     .single()
 
   if (data) {
-    userRole.value = data.role  // Set role berdasarkan data yang didapat
+    userRole.value = data.role  
   }
 }
 
 onMounted(() => {
-  getRole()  // Panggil saat komponen dimuat
+  getRole() 
 })
 </script>
 
@@ -57,11 +56,11 @@ onMounted(() => {
 
 @media (max-width: 576px) {
   .navbar {
-    height: 8vh; /* Tinggi lebih kecil untuk layar HP */
+    height: 8vh;
   }
 
   .navbar-brand {
-    font-size: 18px; /* Ukuran font lebih kecil lagi */
+    font-size: 18px; 
   }
 }
 </style>

@@ -8,8 +8,6 @@
           <i class="ms-2 bi bi-person-fill zoom"></i>
         </nuxt-link>
       </div>
-
-      <!-- Saldo Section -->
       <div class="col-12 col-md-3 m-5 d-flex justify-content-center align-items-center riwayat text-center">
         <nuxt-link to="/riwayats" class="test">
           Saldo
@@ -45,7 +43,7 @@ const fetchTotalBalance = async () => {
   if (siswa.value && siswa.value.id) {
     const { data, error } = await client
       .from('siswa')
-      .select('saldo')  // Pastikan hanya 'saldo' yang diambil
+      .select('saldo') 
       .eq('id', siswa.value.id)
       .single();
     
@@ -85,16 +83,15 @@ a {
 }
 
 .zoom {
-  font-size: 5rem;  /* Menggunakan unit rem agar responsif */
+  font-size: 5rem; 
   transition: transform 0.3s ease;
 }
 .zoom:hover {
-  transform: scale(1.1);  /* Tambahkan efek zoom saat hover */
+  transform: scale(1.1);  
 }
 
-/* Styling untuk Profil dan Saldo Section */
 .profil, .riwayat {
-  font-size: 1.5rem; /* Ukuran font default */
+  font-size: 1.5rem; 
   min-height: 150px;
   display: flex;
   justify-content: center;
@@ -119,32 +116,32 @@ a {
   background-color: #BF4E0E;
 }
 
-/* Media Queries untuk responsivitas */
+
 @media (max-width: 992px) {
   .zoom {
-    font-size: 5rem;  /* Membesarkan ikon di tablet */
+    font-size: 5rem; 
   }
   .profil, .riwayat {
-    font-size: 1.25rem;  /* Menyesuaikan ukuran font pada tablet */
+    font-size: 1.25rem; 
   }
 }
 
 @media (max-width: 768px) {
   .zoom {
-    font-size: 6rem;  /* Ikon lebih besar pada layar kecil */
+    font-size: 6rem; 
   }
   .profil, .riwayat {
-    font-size: 1.1rem;  /* Ukuran font lebih kecil di perangkat mobile */
+    font-size: 1.1rem; 
   }
 }
 
 @media (max-width: 576px) {
   .zoom {
-    font-size: 7rem;  /* Ikon sangat besar pada layar mobile */
+    font-size: 7rem; 
   }
   .profil, .riwayat {
-    font-size: 1rem;  /* Ukuran font lebih kecil di perangkat mobile */
-    min-height: 120px;  /* Menurunkan tinggi minimum untuk perangkat kecil */
+    font-size: 1rem;
+    min-height: 120px; 
   }
 }
 </style>

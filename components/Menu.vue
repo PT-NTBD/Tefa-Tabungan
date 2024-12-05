@@ -1,7 +1,6 @@
 <template>
   <div>
-    <button @click="toggleMenu" class="toggle-btn">
-      <i class="bi bi-justify"></i>
+    <button @click="toggleMenu" class="toggle-btn"><i class="bi bi-justify"></i>
     </button>
     <div :class="['menu', { hidden: !menuVisible }]">
       <ul class="nav flex-column p-0">
@@ -149,11 +148,11 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .menu {
-    width: 200px; /* smaller width on mobile */
+    width: 200px; 
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%; /* full height */
+    height: 100%; 
   }
   
   .menu.hidden {
@@ -163,38 +162,35 @@ onMounted(() => {
   .toggle-btn {
     padding: 8px;
     bottom: 15px;
-    left: 15px; /* Keep toggle button on screen */
+    left: 15px; 
   }
 
   .menu-item {
-    font-size: 16px; /* Adjust font size */
+    font-size: 16px; 
   }
   
-  /* Ensure that body is not hidden on small screens */
   body.shift-right {
     overflow-x: hidden;
   }
 }
 
-/* Responsiveness for medium screens (tablets) */
 @media (min-width: 768px) and (max-width: 1024px) {
   .menu {
-    width: 220px; /* slightly smaller width for tablet */
+    width: 220px; 
   }
 
   .menu-item {
-    font-size: 17px; /* Adjust font size */
+    font-size: 17px; 
   }
 }
 
-/* Large screen styles (desktops) */
 @media (min-width: 1024px) {
   .menu {
-    width: 250px; /* default width */
+    width: 250px; 
   }
 
   .menu-item {
-    font-size: 18px; /* default font size */
+    font-size: 18px; 
   }
 }
 </style>

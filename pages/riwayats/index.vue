@@ -1,7 +1,8 @@
 <template>
-  <div class="container-fluid">
-    <div class="row justify-content-evenly">
-      <div class="col-md-3 m-5 text-center">
+  <div class="container-fluid" :class="{ 'shift-right': menuVisible }">
+    <div class="row justify-content-center">
+      <!-- Kolom untuk Total Pemasukan -->
+      <div class="col-12 col-md-3 m-3 text-center">
         <div class="balance-box">
           <h4>Total Pemasukan</h4>
           <h5>
@@ -14,7 +15,8 @@
           </h5>
         </div>
       </div>
-      <div class="col-md-3 m-5 text-center">
+      <!-- Kolom untuk Total Penarikan -->
+      <div class="col-12 col-md-3 m-3 text-center">
         <div class="balance-box">
           <h4>Total Penarikan</h4>
           <h5>
@@ -27,7 +29,8 @@
           </h5>
         </div>
       </div>
-      <div class="col-md-3 m-5 text-center">
+      <!-- Kolom untuk Total Saldo -->
+      <div class="col-12 col-md-3 m-3 text-center">
         <div class="balance-box">
           <h4>Total Saldo</h4>
           <h5>
@@ -46,50 +49,32 @@
 
 <script setup>
 const client = useSupabaseClient();
-const user = useSupabaseUser(); // Ambil user yang sedang login
+const user = useSupabaseUser();
 const totalPemasukan = ref(0);
 const totalPenarikan = ref(0);
 const totalBalance = ref(0);
 const siswa = ref(null);
+const menuVisible = ref(false);
 
-// Fungsi untuk mengambil total pemasukan dan penarikan untuk pengguna yang sedang login
 const fetchBalances = async () => {
   try {
-    // Pastikan user terdaftar
     if (!user.value) {
       console.warn("User not logged in");
       return;
     }
 
-    const userId = user.value.id; // Ambil ID pengguna yang sedang login
+    const userId = user.value.id;
 
-    // Mengambil data pemasukan berdasarkan user ID
     const { data: pemasukanData, error: pemasukanError } = await client
       .from("pemasukan")
-      .select(`
-        nominal,
-        siswa!inner (
-          profile!inner (
-            user_id
-          )
-        )
-      `) // Pastikan nama kolom sesuai dengan tabel Anda
-      .eq("siswa.profile.user_id", userId) // Filter berdasarkan user_id
+      .select(`nominal, siswa!inner ( profile!inner ( user_id ) )`)
+      .eq("siswa.profile.user_id", userId);
 
-    // Mengambil data penarikan berdasarkan user ID
     const { data: penarikanData, error: penarikanError } = await client
       .from("penarikan")
-      .select(`
-        nominal,
-        siswa!inner (
-          profile!inner (
-            user_id
-          )
-        )
-      `) // Pastikan nama kolom sesuai dengan tabel Anda
-      .eq("siswa.profile.user_id", userId) // Filter berdasarkan user_id
+      .select(`nominal, siswa!inner ( profile!inner ( user_id ) )`)
+      .eq("siswa.profile.user_id", userId);
 
-    // Cek error
     if (pemasukanError) {
       console.error("Error while fetching pemasukan:", pemasukanError.message);
       throw new Error(pemasukanError.message);
@@ -99,12 +84,10 @@ const fetchBalances = async () => {
       throw new Error(penarikanError.message);
     }
 
-    // Menjumlahkan total pemasukan
     totalPemasukan.value = pemasukanData
       ? pemasukanData.reduce((acc, item) => acc + item.nominal, 0)
       : 0;
 
-    // Menjumlahkan total penarikan
     totalPenarikan.value = penarikanData
       ? penarikanData.reduce((acc, item) => acc + item.nominal, 0)
       : 0;
@@ -113,7 +96,6 @@ const fetchBalances = async () => {
   }
 };
 
-// Fungsi untuk mendapatkan profil siswa
 const getProfile = async () => {
   const { data, error } = await client
     .from("profile")
@@ -126,7 +108,6 @@ const getProfile = async () => {
   }
 };
 
-// Fungsi untuk mengambil saldo total dari siswa
 const fetchTotalBalance = async () => {
   try {
     if (!siswa.value) {
@@ -136,39 +117,97 @@ const fetchTotalBalance = async () => {
 
     const { data, error } = await client
       .from("siswa")
-      .select("saldo") // Misalnya saldo ada di kolom 'saldo'
+      .select("saldo")
       .eq("id", siswa.value.id)
       .single();
 
     if (error) throw new Error(error.message);
 
-    if (data) totalBalance.value = data.saldo; // Ambil saldo siswa
+    if (data) totalBalance.value = data.saldo;
   } catch (error) {
     console.error("Terjadi kesalahan saat mengambil saldo:", error.message);
   }
 };
 
-// Memanggil fungsi saat komponen dimuat
 onMounted(async () => {
-  await fetchBalances(); // Ambil total pemasukan dan penarikan
-  await getProfile(); // Ambil profil siswa
-  await fetchTotalBalance(); // Ambil saldo total siswa
+  await fetchBalances();
+  await getProfile();
+  await fetchTotalBalance();
 });
 </script>
 
 <style scoped>
+.container-fluid {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  min-height: 85vh;
+  transition: transform 0.3s ease;
+}
+
+body.shift-right .container-fluid {
+  transform: translateX(100px);
+}
+
 .balance-box {
-  border: 1px solid #ccc;
+  border: 1px solid #f4f4f4;
   border-radius: 5px;
-  padding: 20px;
+  padding: 30px;
   background-color: #1a9ea7;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .balance-box h4 {
   margin: 5px;
 }
+
 .balance-box h5 {
   margin: 20px 0 0;
+}
+
+/* Responsif: Mengubah margin dan padding berdasarkan ukuran layar */
+@media (max-width: 992px) {
+  .balance-box {
+    padding: 15px;
+  }
+  .balance-box h4 {
+    font-size: 1.1rem;
+  }
+  .balance-box h5 {
+    font-size: 1rem;
+  }
+  .col-md-3 {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .balance-box {
+    padding: 10px;
+  }
+  .balance-box h4 {
+    font-size: 1rem;
+  }
+  .balance-box h5 {
+    font-size: 0.9rem;
+  }
+  .col-md-3 {
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .balance-box {
+    padding: 8px;
+  }
+  .balance-box h4 {
+    font-size: 0.9rem;
+  }
+  .balance-box h5 {
+    font-size: 0.8rem;
+  }
+  .col-md-3 {
+    margin: 5px 0;
+  }
 }
 </style>

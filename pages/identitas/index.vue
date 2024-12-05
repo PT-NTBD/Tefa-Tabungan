@@ -57,9 +57,9 @@ body.shift-right .container-fluid {
   font-size: 1.1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease-in-out;
-  max-width: 1500px; /* Menambahkan batasan lebar maksimal pada list item */
-  width: 100%; /* Memastikan lebar maksimal tidak melebihi 100% dari kolom */
-  margin: 10px auto; /* Menyusun item ke tengah */
+  max-width: 1000px; 
+  width: 100%; 
+  margin: 10px auto; 
 }
 
 /* Responsif untuk ukuran layar lebih kecil */

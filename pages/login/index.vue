@@ -1,11 +1,11 @@
 <template>
   <div class="tinggi container-fluid">
     <div class="row justify-content-center">
-      <div class="col-3">
+      <div class="col-11 col-sm-8 col-md-6 col-lg-4">
         <div class="container shadow p-3" style="background-color: #D9D9D9;">
           <form>
             <div class="mb-3">
-              <h2 class="row justify-content-center">Login</h2>
+              <h2 class="text-center">Login</h2>
             </div>
 
             <!-- Email Field -->
@@ -19,7 +19,7 @@
             </div>
 
             <!-- Password Field -->
-            <div class="mb-5 position-relative">
+            <div class="mb-4 position-relative">
               <input 
                 v-model="password" 
                 :type="isPasswordVisible ? 'text' : 'password'" 
@@ -38,8 +38,8 @@
             </div>
 
             <!-- Login Button -->
-            <div class="mb-5">
-              <button @click="handleLogin" type="button" class="button">Masuk</button>
+            <div class="mb-3">
+              <button @click="handleLogin" type="button" class="button w-100">Masuk</button>
             </div>
           </form>
         </div>
@@ -67,7 +67,6 @@ async function handleLogin() {
   })
 
   if (error) {
-    // Check the error type and assign the appropriate error message
     if (error.message.includes("invalid email")) {
       errorMessage.value = "Email yang anda masukkan salah"
     } else if (error.message.includes("incorrect password")) {
@@ -75,8 +74,6 @@ async function handleLogin() {
     } else {
       errorMessage.value = "Periksa lebih teliti !!!"
     }
-    
-    // Clear error message after 3 seconds
     setTimeout(() => {
       errorMessage.value = ""
     }, 1000)
@@ -88,7 +85,6 @@ async function handleLogin() {
   }
 }
 
-// Function to get user role after login
 async function getProfileRole(id) {
   const { data, error } = await client
     .from('profile')
@@ -101,7 +97,6 @@ async function getProfileRole(id) {
   }
 }
 
-// Toggle password visibility
 function togglePasswordVisibility() {
   isPasswordVisible.value = !isPasswordVisible.value
 }
@@ -110,36 +105,48 @@ function togglePasswordVisibility() {
 <style scoped>
 .tinggi {
   height: 100vh;
-  padding-block: 20vh;
+  padding-block: 10vh;
 }
+
 .button {
   border: none;
   color: white;
   background: #1A9EA7;
-  margin: 4px 5px;
-  padding: 5px 10px;
+  padding: 10px 15px;
   font-size: 16px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
   cursor: pointer;
 }
-.row {
-  padding-block: 25px;
+
+@media (max-width: 768px) {
+  .tinggi {
+    padding-block: 5vh;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  .form-control {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
 }
+
 .icon {
   background-color: white;
   padding-left: 40px;
   padding-right: 40px;
-  background-size: 25px;
 }
+
 .icon-gembok {
   background-color: white;
   padding-left: 40px;
   padding-right: 40px;
-  background-size: 25px;
-}
-.position-relative {
-  position: relative;
 }
 </style>
